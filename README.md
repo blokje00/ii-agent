@@ -91,6 +91,25 @@ Despite these challenges, II-Agent demonstrated strong performance on the benchm
 ![GAIA Benchmark](assets/gaia.jpg)
 You can view the full traces of some samples here: [GAIA Benchmark Traces](https://ii-agent-gaia.ii.inc/)
 
+## Special Considerations for Apple Silicon (M1/M2/M3) Macs
+
+This project can be installed and run on Apple Silicon Macs. However, due to the ARM64 architecture, here are a few key considerations:
+
+*   **Native ARM64 Tooling:** For best performance and compatibility, ensure your core development tools are ARM64 native. This includes:
+    *   Python: Installed via a version manager like `pyenv` (see Python installation notes above).
+    *   Node.js: Installed via a version manager like `nvm` (see Frontend README for details).
+    You can check the architecture of your Python and Node interpreters by running `python -c "import platform; print(platform.machine())"` and `node -p "os.arch()"` respectively. Both should output `arm64`.
+
+*   **Xcode Command Line Tools:** Essential for compiling some dependencies. Install with `xcode-select --install`.
+
+*   **Homebrew:** Use an ARM64 version of Homebrew (which installs to `/opt/homebrew` by default). It's crucial for installing some library dependencies that Python packages might need.
+
+*   **Python Package Dependencies:**
+    *   Most Python packages listed in `pyproject.toml` now provide ARM64 wheels and should install correctly with an ARM64 Python and up-to-date pip.
+    *   For specific advice on `Playwright`, `Pillow`, and `PyMuPDF`, see the notes within the "Installation" -> "Set up Python environment" section.
+
+*   **Rosetta 2 (Fallback):** If you encounter insurmountable issues running a specific tool or dependency natively on ARM64, macOS provides Rosetta 2, which allows x86_64 applications to run. You can run an entire terminal session under Rosetta 2 (e.g., by duplicating your terminal app, checking "Open using Rosetta" in its Get Info window, and running installation steps there). However, native ARM64 is generally recommended for performance and to avoid potential cross-architecture complications.
+
 ## Requirements
 
 - Python 3.10+
@@ -134,10 +153,39 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 
 1. Clone the repository
 2. Set up Python environment:
+
+   **Important Notes for M1/M2/M3 Mac Users (Apple Silicon):**
+
+   *   **Python Installation:** It is highly recommended to manage your Python installation using a version manager like `pyenv` or `asdf`. This helps ensure you are using an ARM64 build of Python. For example, with `pyenv`:
+       ```bash
+       brew install pyenv
+       pyenv install 3.10.x # Replace x with the latest patch version
+       pyenv global 3.10.x # or pyenv local 3.10.x
+       ```
+   *   **Xcode Command Line Tools:** Some Python packages may need to compile C extensions during installation. Ensure you have Xcode Command Line Tools installed:
+       ```bash
+       xcode-select --install
+       ```
+       If you encounter issues with a specific package, you may also need to ensure Homebrew is installed and up-to-date, as it can provide necessary build libraries.
+
    ```bash
    python -m venv .venv
    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    pip install -e .
+   # After installing dependencies, ensure Playwright browsers are downloaded:
+   playwright install
+   # For M1/M2/M3 Mac users, if you encounter issues with browser operations,
+   # try installing with system dependencies:
+   # playwright install --with-deps
+
+   **Notes on Specific Python Dependencies for M1/M2/M3 Macs:**
+
+   *   **Pillow (Image Manipulation):** While Pillow usually installs via a pre-compiled wheel, if you encounter issues or if it tries to build from source, you might need to install its dependencies:
+       ```bash
+       brew install jpeg zlib
+       ```
+       Then, try reinstalling Pillow: `pip install --force-reinstall --no-cache-dir Pillow`.
+   *   **PyMuPDF (PDF Handling):** PyMuPDF provides pre-compiled wheels for Apple Silicon (ARM64). Installation via `pip install pymupdf` (which is part of `pip install -e .`) should work without additional steps, assuming your Python environment is correctly configured for ARM64.
    ```
 
 3. Set up frontend (optional):

@@ -7,6 +7,17 @@ The II Agent Frontend is a modern web interface for the II Agent platform, provi
 ## Prerequisites
 
 - Node.js 18+ (LTS recommended)
+
+  **Note for M1/M2/M3 Mac Users (Apple Silicon):**
+
+  *   It is recommended to manage your Node.js installation using a version manager like `nvm`. This helps ensure you are using an ARM64 build of Node.js. For example, with `nvm`:
+      ```bash
+      # Install nvm (if you haven't already)
+      curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.x/install.sh | bash 
+      # (Close and reopen your terminal, or source your shell profile)
+      nvm install 18 # Or the specific version required by the project
+      nvm use 18
+      ```
 - npm or yarn package manager
 - II Agent backend server running (WebSocket server)
 
