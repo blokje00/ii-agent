@@ -28,10 +28,32 @@ function Tooltip({
   );
 }
 
+/**
+ * TooltipTrigger component that wraps a clickable element to trigger the tooltip.
+ * 
+ * When using with Button or other interactive elements, set asChild={true} to prevent
+ * nesting button elements, which causes hydration errors.
+ * 
+ * Example:
+ * <Tooltip>
+ *   <TooltipTrigger asChild>
+ *     <Button>Click me</Button>
+ *   </TooltipTrigger>
+ * </Tooltip>
+ */
 function TooltipTrigger({
+  asChild = false,
   ...props
-}: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {
-  return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
+}: React.ComponentProps<typeof TooltipPrimitive.Trigger> & {
+  asChild?: boolean;
+}) {
+  return (
+    <TooltipPrimitive.Trigger
+      data-slot="tooltip-trigger"
+      asChild={asChild}
+      {...props}
+    />
+  );
 }
 
 function TooltipContent({

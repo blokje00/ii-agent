@@ -39,6 +39,19 @@ const buttonVariants = cva(
   }
 );
 
+/**
+ * Button component that can be used as a regular button or as a child of another component.
+ * 
+ * When used inside components like TooltipTrigger, make sure to set asChild={true} on the
+ * TooltipTrigger to avoid nesting button elements, which causes hydration errors.
+ * 
+ * Example:
+ * <Tooltip>
+ *   <TooltipTrigger asChild>
+ *     <Button>Click me</Button>
+ *   </TooltipTrigger>
+ * </Tooltip>
+ */
 function Button({
   className,
   variant,
